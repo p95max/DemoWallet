@@ -34,3 +34,5 @@ class LedgerEntry(models.Model):
 
     class Meta:
         ordering = ['-created_at']
+        verbose_name = "Ledger entry"
+        verbose_name_plural = "Ledger entries"
