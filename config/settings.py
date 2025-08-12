@@ -1,6 +1,5 @@
 import os
-
-from decouple import config, Csv, Config, RepositoryEnv
+from decouple import Csv, Config, RepositoryEnv
 from pathlib import Path
 
 
@@ -18,6 +17,7 @@ AUTH_USER_MODEL = 'users.User'
 # Application definition
 
 INSTALLED_APPS = [
+    'apps.users',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -26,7 +26,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'apps.accounts',
-    'apps.users',
+    'apps.transactions',
+    'apps.payments',
+    'apps.ledger',
+    'apps.disputes'
 ]
 
 MIDDLEWARE = [
