@@ -17,19 +17,26 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto">
-                <li class="nav-item"><a class="nav-link" href="/">Dashboard</a></li>
-                <li class="nav-item"><a class="nav-link" href="/wallets/">Wallets</a></li>
-                <li class="nav-item"><a class="nav-link" href="/transactions/">Transactions</a></li>
-                <li class="nav-item"><a class="nav-link" href="/transfers/">Transfers</a></li>
-                <li class="nav-item"><a class="nav-link" href="/disputes/">Disputes</a></li>
-            </ul>
+    <li class="nav-item">
+        <a class="nav-link{% if not user.is_authenticated %} disabled{% endif %}" href="/">Dashboard</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link{% if not user.is_authenticated %} disabled{% endif %}" href="/wallets/">Wallets</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link{% if not user.is_authenticated %} disabled{% endif %}" href="/transactions/">Transactions</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link{% if not user.is_authenticated %} disabled{% endif %}" href="/transfers/">Transfers</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link{% if not user.is_authenticated %} disabled{% endif %}" href="/disputes/">Disputes</a>
+    </li>
+</ul>
             <ul class="navbar-nav">
                 {% if user.is_authenticated %}
                     <li class="nav-item"><a class="nav-link" href="/profile/">Hello, {{ user.username }}</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/logout/">Logout</a></li>
-                {% else %}
-                    <li class="nav-item"><a class="nav-link" href="/login/">Login</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/register/">Sign Up</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'account_logout' %}">Logout</a></li>
                 {% endif %}
             </ul>
         </div>
@@ -37,7 +44,7 @@
 </nav>
 
 <main class="container my-4">
-    <div class="pb-3 border-bottom mb-4">
+    <div class="pb-3 border-bottom mb-4 text-center">
         <h1 class="h3">{% block page_title %}{% endblock %}</h1>
         <p class="text-muted">{% block page_subtitle %}{% endblock %}</p>
     </div>

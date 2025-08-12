@@ -8,6 +8,7 @@ urlpatterns = [
     # Web
     path('', include('apps.web.urls')),
     path('admin/', admin.site.urls),
+    path('accounts/', include('allauth.urls')),
 
     # APIs
     path('api/users/', include('apps.users.urls')),

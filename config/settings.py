@@ -28,6 +28,12 @@ INSTALLED_APPS = [
     'rest_framework',
     "drf_spectacular",
     "drf_spectacular_sidecar",
+    'widget_tweaks',
+
+    'django.contrib.sites',  # обязательно!
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
 
     'apps.web',
     'apps.accounts',
@@ -37,6 +43,14 @@ INSTALLED_APPS = [
     'apps.disputes'
 ]
 
+SITE_ID = 1
+
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = "email"
+ACCOUNT_LOGOUT_REDIRECT_URL = '/'
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -45,6 +59,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'

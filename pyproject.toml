@@ -15,6 +15,8 @@ django-email-users = "^2.1.0"
 drf-yasg = "^1.21.10"
 drf-spectacular = "^0.28.0"
 drf-spectacular-sidecar = "^2025.8.1"
+django-allauth = "^65.10.0"
+django-widget-tweaks = "^1.5.0"
 
 
 [build-system]
