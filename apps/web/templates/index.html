@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Welcome to DemoWallet{% endblock %}
+
+{% block page_title %}Manage Your Finances Smarter{% endblock %}
+{% block page_subtitle %}A simple, secure, and fast way to track your wallets and transactions{% endblock %}
+
+{% block content %}
+<section class="text-center py-5">
+    <h2 class="display-5 fw-bold">Why Choose DemoWallet?</h2>
+    <p class="lead text-muted mb-5">
+        DemoWallet helps you take control of your personal finances with ease.
+        Track transactions, manage multiple wallets, and stay informed — all in one place.
+    </p>
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">💳 Multiple Wallets</h5>
+                    <p class="card-text">Create and manage wallets for different currencies and purposes.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">📊 Easy Tracking</h5>
+                    <p class="card-text">Monitor all your transactions with detailed history and analytics.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">🔒 Secure Access</h5>
+                    <p class="card-text">Your data is safe with industry-standard encryption and privacy protection.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="text-center my-5">
+    <a href="/register/" class="btn btn-primary btn-lg me-2">Sign Up</a>
+    <a href="/login/" class="btn btn-outline-secondary btn-lg">Log In</a>
+</section>
+{% endblock %}

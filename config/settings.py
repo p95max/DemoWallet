@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     "drf_spectacular",
     "drf_spectacular_sidecar",
 
+    'apps.web',
     'apps.accounts',
     'apps.transactions',
     'apps.payments',

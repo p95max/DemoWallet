@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Home — DemoWallet{% endblock %}
+{% block page_title %}Home{% endblock %}
+{% block page_subtitle %}Your personal wallet overview{% endblock %}
+
+{% block content %}
+<div class="row g-3">
+  <!-- Balance -->
+  <div class="col-12 col-md-6 col-xl-4">
+    <div class="card p-3">
+      <h6>Current Balance</h6>
+      <div class="fs-4 fw-bold text-success">$ 1,254.32</div>
+      <small class="muted">+3.2% this month</small>
+    </div>
+  </div>
+
+  <!-- Recent Transactions -->
+  <div class="col-12 col-md-6 col-xl-4">
+    <div class="card p-3">
+      <h6>Recent Transactions</h6>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">Coffee — $3.20 <span class="muted small float-end">Today</span></li>
+        <li class="list-group-item">Salary — $1,200 <span class="muted small float-end">3 days ago</span></li>
+      </ul>
+      <div class="mt-2 text-end"><a href="/transactions/">View all</a></div>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="col-12 col-xl-4">
+    <div class="card p-3">
+      <h6>Quick Actions</h6>
+      <div class="d-grid gap-2 mt-2">
+        <a href="/deposit/" class="btn btn-success btn-sm">Deposit</a>
+        <a href="/withdraw/" class="btn btn-danger btn-sm">Withdraw</a>
+        <a href="/transfers/" class="btn btn-primary btn-sm">Send Transfer</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="my-4">
+
+<!-- Additional widgets -->
+<div class="row g-3">
+  <div class="col-12 col-lg-6">
+    <div class="card p-3">
+      <h6>Category Statistics</h6>
+      <div class="text-muted small">A chart of expenses by category can be displayed here.</div>
+    </div>
+  </div>
+  <div class="col-12 col-lg-6">
+    <div class="card p-3">
+      <h6>Latest Disputes</h6>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">Dispute #102 — Awaiting Response</li>
+        <li class="list-group-item">Dispute #98 — Resolved</li>
+      </ul>
+      <div class="mt-2 text-end"><a href="/disputes/">Go to Disputes</a></div>
+    </div>
+  </div>
+</div>
+{% endblock %}
