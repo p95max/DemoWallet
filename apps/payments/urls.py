@@ -1,7 +1,7 @@
 from rest_framework.routers import DefaultRouter
-from .views import UserViewSet
+from .views import PaymentViewSet
 
 router = DefaultRouter()
-router.register(r'', UserViewSet)
+router.register(r'', PaymentViewSet)
 
 urlpatterns = router.urls
