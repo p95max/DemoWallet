@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% load widget_tweaks %}
+{% load socialaccount %}
 
 {% block title %}Login - DemoWallet{% endblock %}
 {% block page_title %}Login{% endblock %}
@@ -33,4 +34,8 @@
 <p class="mt-2 text-center">
     Don't have an account? <a href="{% url 'account_signup' %}">Sign up</a>
 </p>
+<a href="{% provider_login_url 'google' %}" class="google-btn">
+    <i class="fab fa-google google-icon"></i>
+    Sign in with Google
+</a>
 {% endblock %}

@@ -1,8 +1,10 @@
 from django.contrib import admin
 from django.urls import path, include
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
+from django.conf import settings
+from django.conf.urls.static import static
 
-
+from config.settings import BASE_DIR
 
 urlpatterns = [
     # Web
@@ -23,3 +25,6 @@ urlpatterns = [
     path('api/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
     path('swagger/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui-old'),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root="/home/maxx/PycharmProjects/DemoWallet/static")
