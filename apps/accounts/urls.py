@@ -1,10 +1,10 @@
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-from .views import AccountViewSet
+from django.urls import path
+from apps.accounts import views
 
-router = DefaultRouter()
-router.register(r'accounts', AccountViewSet)
+app_name = 'wallets'
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path('wallets/', views.wallets, name='wallets'),
+    path('wallets/create/', views.create_wallet, name='create_wallet'),
+    path('wallets/<int:pk>/delete/', views.delete_wallet, name='delete_wallet'),
 ]

@@ -6,4 +6,4 @@ def main_page(request):
 
 @login_required
 def dashboard_page(request):
-    return render(request, 'dashboard.html')
+    return render(request, 'wallets/wallets.html')

@@ -12,9 +12,11 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
 
+    path('wallets/', include('apps.accounts.urls')),
+
     # APIs
     path('api/users/', include('apps.users.urls')),
-    path('api/accounts/', include('apps.accounts.urls')),
+    path('api/accounts/', include('apps.accounts.urls_api')),
     path('api/transactions/', include('apps.transactions.urls')),
     path('api/payments/', include('apps.payments.urls')),
     path('api/ledger/', include('apps.ledger.urls')),

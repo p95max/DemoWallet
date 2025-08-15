@@ -30,6 +30,9 @@ INSTALLED_APPS = [
     "drf_spectacular_sidecar",
     'widget_tweaks',
 
+    'crispy_forms',
+    'crispy_bootstrap5',
+
     'django.contrib.sites',
     'allauth',
     'allauth.account',
@@ -169,3 +172,6 @@ SOCIALACCOUNT_PROVIDERS = {
         }
     }
 }
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"

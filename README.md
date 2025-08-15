@@ -14,6 +14,7 @@ DemoWallet is a modern MVP for a digital wallet and payment system, built with D
 - Dispute management
 - Django admin panel
 - OpenAPI documentation (Swagger / ReDoc)
+- Auth by Google
 
 ---
 
