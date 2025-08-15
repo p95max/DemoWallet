@@ -7,13 +7,18 @@ from .models import Account
 from .serializers import AccountSerializer
 
 class AccountViewSet(viewsets.ModelViewSet):
-    queryset = Account.objects.all()
+    queryset = Account.objects.select_related('owner').all()
     serializer_class = AccountSerializer
 
 
 @login_required
 def wallets(request):
-    accounts = request.user.accounts.all()
+    accounts = (
+        request.user.accounts
+        .select_related('owner')
+        .prefetch_related('transactions')
+        .all()
+    )
     context = {
         'accounts': accounts,
         "user": request.user,
@@ -37,6 +42,7 @@ def create_wallet(request):
             wallet = form.save(commit=False)
             wallet.owner = request.user
             wallet.save()
+            messages.success(request, "Wallet created successfully!")
             return redirect('wallets:wallets')
     else:
         form = AccountForm()
@@ -44,12 +50,11 @@ def create_wallet(request):
 
 @login_required
 def delete_wallet(request, pk):
-    wallet = get_object_or_404(Account, pk=pk, owner=request.user)
+    wallet = get_object_or_404(Account.objects.select_related('owner'), pk=pk, owner=request.user)
     if wallet.balance > 0:
         messages.error(request, "Cannot remove this wallet with positive balance!")
         return redirect('wallets:wallets')
     if request.method == "POST":
         wallet.delete()
-        messages.success(request, "Current wallet is deleted!.")
-        return redirect('wallets:wallets')
-    return render(request, "wallets/confirm_delete_wallet.html", {"wallet": wallet})
+        messages.success(request, "Wallet is deleted successfully!")
+    return redirect('wallets:wallets')
