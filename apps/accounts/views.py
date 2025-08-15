@@ -25,7 +25,6 @@ def wallets(request):
     }
     return render(request, "wallets/wallets.html", context=context)
 
-
 @login_required
 def create_wallet(request):
     if request.method == "POST":
