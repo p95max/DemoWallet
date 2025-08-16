@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="container mt-5" style="max-width: 500px;">
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <div class="d-flex align-items-center mb-3">
+                <i class="fa-solid fa-wallet fa-2x me-3 text-primary"></i>
+                <div>
+                    <h4 class="mb-0">{{ wallet.name|default:wallet.get_type_display|upper }}</h4>
+                    <small class="text-muted">{{ wallet.currency|upper }}</small>
+                </div>
+            </div>
+            <div class="text-center mb-2">
+                <span class="fw-bold fs-2 text-success">{{ wallet.balance|default:"0.00" }} {{ wallet.currency|upper }}</span>
+                <div class="text-muted small">Current balance</div>
+            </div>
+            <div class="d-flex justify-content-between align-items-center mt-3">
+                <span class="badge bg-secondary">Created: {{ wallet.created_at|date:"d.m.Y" }}</span>
+                <a href="{% url 'wallets:topup_wallet' wallet.pk %}" class="btn btn-outline-success btn-sm">
+                    <i class="fa-solid fa-plus"></i> Top up
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <h6 class="mb-3">Recent transactions</h6>
+    {% if transactions %}
+        <ul class="list-group">
+            {% for tx in transactions|slice:":10" %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <span class="fw-bold">{{ tx.get_txn_type_display }}</span>
+                        <br>
+                        <small class="text-muted">{{ tx.created_at|date:"d.m.Y H:i" }}</small>
+                    </div>
+                    <span class="fw-bold {% if tx.amount > 0 %}text-success{% else %}text-danger{% endif %}">
+                        {% if tx.account_to_id == wallet.id %}+{% else %}-{% endif %}
+                        {{ tx.amount }} {{ wallet.currency|upper }}
+                    </span>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <div class="alert alert-info mt-3">No transactions yet.</div>
+    {% endif %}
+</div>
+{% endblock %}

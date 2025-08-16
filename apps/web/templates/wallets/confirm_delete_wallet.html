@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5" style="max-width: 450px;">
+    <div class="card shadow-sm">
+        <div class="card-body text-center">
+            <h4 class="mb-3 text-danger">
+                <i class="fa-solid fa-triangle-exclamation me-2"></i>
+                Delete wallet
+            </h4>
+            <p>
+                Are you sure you want to delete wallet<br>
+                <b>{{ wallet.get_type_display|upper }} ({{ wallet.currency|upper }})</b>?
+            </p>
+            {% if wallet.balance > 0 %}
+                <div class="alert alert-warning mb-3">
+                    This wallet has a positive balance: <b>{{ wallet.balance }} {{ wallet.currency|upper }}</b>
+                </div>
+                {% if other_wallets %}
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="target_wallet" class="form-label">Select another wallet to transfer the funds:</label>
+                            <select name="target_wallet" id="target_wallet" class="form-select" required>
+                                {% for w in other_wallets %}
+                                    <option value="{{ w.pk }}">
+                                        {{ w.get_type_display }} ({{ w.currency|upper }}) — {{ w.balance }} {{ w.currency|upper }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-danger w-100">Transfer &amp; Delete</button>
+                    </form>
+                    <a href="{% url 'wallets:wallets' %}" class="btn btn-outline-secondary w-100 mt-2">Cancel</a>
+                {% else %}
+                    <div class="alert alert-info">
+                        You have no other wallets to transfer the funds to.<br>
+                        Please create another wallet first.
+                    </div>
+                    <a href="{% url 'wallets:wallets' %}" class="btn btn-outline-secondary w-100">Back</a>
+                {% endif %}
+            {% else %}
+                <form method="post" class="mb-2">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger w-100">Delete</button>
+                </form>
+                <a href="{% url 'wallets:wallets' %}" class="btn btn-outline-secondary w-100">Cancel</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5" style="max-width: 400px;">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h4 class="mb-3">Top-up wallet</h4>
+            <p>Кошелёк: <b>{{ wallet.get_type_display }} ({{ wallet.currency|upper }})</b></p>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-success w-100">Top-up</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

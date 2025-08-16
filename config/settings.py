@@ -175,3 +175,9 @@ SOCIALACCOUNT_PROVIDERS = {
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+
+CURRENCY_RATES = {
+    ('USD', 'EUR'): 0.92,
+    ('EUR', 'USD'): 1.09,
+}
