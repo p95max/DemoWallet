@@ -76,6 +76,7 @@ def create_wallet(request):
 
 @login_required
 def delete_wallet(request, pk):
+    print("USER:", request.user.id, "PK:", pk)
     wallet = get_object_or_404(Account.objects.select_related('owner'), pk=pk, owner=request.user)
     if wallet.balance > 0:
         other_wallets = request.user.accounts.exclude(pk=wallet.pk).only('id', 'name', 'currency')

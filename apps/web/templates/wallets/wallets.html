@@ -33,13 +33,9 @@
                                 <a href="{% url 'wallets:wallet_detail' account.pk %}" class="btn btn-outline-primary btn-sm me-2" title="History">
                                     <i class="fa-solid fa-clock-rotate-left"></i> History
                                 </a>
-                                <form method="post" action="{% url 'wallets:delete_wallet' account.pk %}" style="display:inline;">
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn btn-outline-danger btn-sm"
-                                        {% if account.balance > 0 %}disabled title="Wallet must be empty!"{% endif %}>
-                                        <i class="fa-solid fa-trash"></i>
-                                    </button>
-                                </form>
+                                <a href="{% url 'wallets:delete_wallet' account.pk %}" class="btn btn-outline-danger btn-sm">
+                                    <i class="fa-solid fa-trash"></i>
+                                </a>
                             </div>
                         </div>
                     </div>
