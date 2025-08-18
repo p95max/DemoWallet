@@ -20,9 +20,17 @@ class TransferForm(forms.Form):
         wallets = user.accounts.all()
         self.fields['from_wallet'].queryset = wallets
         self.fields['to_wallet'].queryset = wallets
+
+        # Показывать баланс в выпадающем списке
+        self.fields['from_wallet'].label_from_instance = self.wallet_label
+        self.fields['to_wallet'].label_from_instance = self.wallet_label
+
         if 'from_wallet' in self.data:
             try:
                 from_wallet_id = int(self.data.get('from_wallet'))
                 self.fields['to_wallet'].queryset = wallets.exclude(pk=from_wallet_id)
             except (ValueError, TypeError):
                 pass
+
+    def wallet_label(self, wallet):
+        return f"{wallet.name} ({wallet.currency.upper()}) — {wallet.balance:.2f} {wallet.currency.upper()}"

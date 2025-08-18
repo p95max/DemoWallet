@@ -1,6 +1,7 @@
 from decimal import Decimal
 
 from django.contrib import messages
+from django.db import transaction
 from django.shortcuts import render, redirect, get_object_or_404
 from rest_framework import viewsets
 from django.db.models import Q, Prefetch
@@ -139,6 +140,11 @@ def transfer_wallet(request):
             from_wallet = form.cleaned_data['from_wallet']
             to_wallet = form.cleaned_data['to_wallet']
             amount = form.cleaned_data['amount']
+
+            if amount > from_wallet.balance:
+                messages.error(request, "Not enough funds.")
+                return render(request, "wallets/transfer_wallet.html", {"form": form})
+
             rate = Decimal("1")
             if from_wallet.currency != to_wallet.currency:
                 rate = Decimal(str(getattr(settings, "CURRENCY_RATES", {}).get(
@@ -146,10 +152,7 @@ def transfer_wallet(request):
                 )))
             converted_amount = round(amount * rate, 2)
 
-            if amount > from_wallet.balance:
-                messages.error(request, "Not enough funds.")
-            else:
-
+            with transaction.atomic():
                 Transaction.objects.create(
                     account_from=from_wallet,
                     account_to=to_wallet,
@@ -158,19 +161,21 @@ def transfer_wallet(request):
                     currency=from_wallet.currency,
                     status='completed'
                 )
-                Transaction.objects.create(
-                    account_from=from_wallet,
-                    account_to=to_wallet,
-                    txn_type='p2p',
-                    amount=converted_amount,
-                    currency=to_wallet.currency,
-                    status='completed'
-                )
-                messages.success(
-                    request,
-                    f"Transferred {amount} {from_wallet.currency.upper()} → {converted_amount} {to_wallet.currency.upper()}"
-                )
-                return redirect('wallets:wallets')
+                if from_wallet.currency != to_wallet.currency:
+                    Transaction.objects.create(
+                        account_from=from_wallet,
+                        account_to=to_wallet,
+                        txn_type='p2p',
+                        amount=converted_amount,
+                        currency=to_wallet.currency,
+                        status='completed'
+                    )
+
+            messages.success(
+                request,
+                f"Transferred {amount} {from_wallet.currency.upper()} → {converted_amount} {to_wallet.currency.upper()}"
+            )
+            return redirect('wallets:wallets')
     else:
         form = TransferForm(request.user)
     return render(request, "wallets/transfer_wallet.html", {"form": form})
