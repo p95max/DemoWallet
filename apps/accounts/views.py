@@ -139,8 +139,8 @@ def transfer_wallet_internal(request):
     if request.method == "POST":
         form = TransferForm(request.user, request.POST)
         if form.is_valid():
-            from_wallet = form.cleaned_data['from_account']
-            to_wallet = form.cleaned_data['to_account']
+            from_wallet = form.cleaned_data['from_wallet']
+            to_wallet = form.cleaned_data['to_wallet']
             amount = form.cleaned_data['amount']
 
             if amount > from_wallet.balance:
@@ -155,35 +155,16 @@ def transfer_wallet_internal(request):
             converted_amount = round(amount * rate, 2)
 
             with transaction.atomic():
-                if from_wallet.currency == to_wallet.currency:
-                    # Одна транзакция
-                    Transaction.objects.create(
-                        account_from=from_wallet,
-                        account_to=to_wallet,
-                        txn_type='p2p',
-                        amount=amount,
-                        currency=from_wallet.currency,
-                        status='completed'
-                    )
-                else:
-
-                    Transaction.objects.create(
-                        account_from=from_wallet,
-                        account_to=to_wallet,
-                        txn_type='p2p',
-                        amount=amount,
-                        currency=from_wallet.currency,
-                        status='completed'
-                    )
-
-                    Transaction.objects.create(
-                        account_from=None,
-                        account_to=to_wallet,
-                        txn_type='p2p',
-                        amount=converted_amount,
-                        currency=to_wallet.currency,
-                        status='completed'
-                    )
+                Transaction.objects.create(
+                    account_from=from_wallet,
+                    account_to=to_wallet,
+                    txn_type='p2p',
+                    amount=amount,
+                    currency=from_wallet.currency,
+                    converted_amount=converted_amount,
+                    converted_currency=to_wallet.currency,
+                    status='completed'
+                )
 
             messages.success(
                 request,

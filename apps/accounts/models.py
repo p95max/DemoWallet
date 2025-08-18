@@ -20,6 +20,10 @@ class Account(models.Model):
     currency = models.CharField(max_length=3, choices=CURRENCY_TYPE_CHOICES, default='EUR')
     created_at = models.DateTimeField(auto_now_add=True)
 
+    converted_amount = models.DecimalField(max_digits=12, decimal_places=2, null=True,
+                                           blank=True)
+    converted_currency = models.CharField(max_length=3, null=True, blank=True)
+
     @property
     def balance(self):
         incoming = self.incoming_transactions.aggregate(total=Sum('amount'))['total'] or 0

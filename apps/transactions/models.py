@@ -31,6 +31,8 @@ class Transaction(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     idempotency_key = models.CharField(max_length=128, null=True, blank=True, unique=True)
     message = models.CharField(max_length=255, blank=True, null=True)
+    converted_amount = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)  # <--
+    converted_currency = models.CharField(max_length=3, null=True, blank=True)
 
     class Meta:
         ordering = ['-created_at']
