@@ -2,6 +2,7 @@ from decimal import Decimal
 
 from django.contrib import messages
 from django.db import transaction
+from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from rest_framework import viewsets
 from django.db.models import Q, Prefetch
@@ -127,8 +128,9 @@ def topup_wallet(request, pk):
         form = TopUpForm()
     return render(request, "wallets/topup_wallet.html", {"form": form, "wallet": wallet})
 
+
 @login_required
-def transfer_wallet(request):
+def transfer_wallet_internal(request):
     accounts = request.user.accounts.all()
     if accounts.count() < 2:
         messages.error(request, "You need at least two wallets to make a transfer.")
@@ -137,8 +139,8 @@ def transfer_wallet(request):
     if request.method == "POST":
         form = TransferForm(request.user, request.POST)
         if form.is_valid():
-            from_wallet = form.cleaned_data['from_wallet']
-            to_wallet = form.cleaned_data['to_wallet']
+            from_wallet = form.cleaned_data['from_account']
+            to_wallet = form.cleaned_data['to_account']
             amount = form.cleaned_data['amount']
 
             if amount > from_wallet.balance:
@@ -153,17 +155,29 @@ def transfer_wallet(request):
             converted_amount = round(amount * rate, 2)
 
             with transaction.atomic():
-                Transaction.objects.create(
-                    account_from=from_wallet,
-                    account_to=to_wallet,
-                    txn_type='p2p',
-                    amount=amount,
-                    currency=from_wallet.currency,
-                    status='completed'
-                )
-                if from_wallet.currency != to_wallet.currency:
+                if from_wallet.currency == to_wallet.currency:
+                    # Одна транзакция
                     Transaction.objects.create(
                         account_from=from_wallet,
+                        account_to=to_wallet,
+                        txn_type='p2p',
+                        amount=amount,
+                        currency=from_wallet.currency,
+                        status='completed'
+                    )
+                else:
+
+                    Transaction.objects.create(
+                        account_from=from_wallet,
+                        account_to=to_wallet,
+                        txn_type='p2p',
+                        amount=amount,
+                        currency=from_wallet.currency,
+                        status='completed'
+                    )
+
+                    Transaction.objects.create(
+                        account_from=None,
                         account_to=to_wallet,
                         txn_type='p2p',
                         amount=converted_amount,
@@ -179,3 +193,16 @@ def transfer_wallet(request):
     else:
         form = TransferForm(request.user)
     return render(request, "wallets/transfer_wallet.html", {"form": form})
+
+@login_required
+def get_user_wallets(request):
+    user_id = request.GET.get('user_id')
+    wallets = []
+    if user_id:
+        accounts = Account.objects.filter(owner_id=user_id)
+        for acc in accounts:
+            wallets.append({
+                'id': acc.id,
+                'label': f"({acc.currency.upper()})"
+            })
+    return JsonResponse({'wallets': wallets})

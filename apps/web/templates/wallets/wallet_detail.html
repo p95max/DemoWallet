@@ -33,8 +33,20 @@
                         <span class="fw-bold">{{ tx.get_txn_type_display }}</span>
                         <br>
                         <small class="text-muted">{{ tx.created_at|date:"d.m.Y H:i" }}</small>
+                        {% if tx.txn_type == 'p2p' and tx.account_from and tx.account_from.owner != user %}
+                            <br>
+                            <span class="text-primary small">
+                                From: {{ tx.account_from.owner.email }}
+                            </span>
+                        {% endif %}
+                        {% if tx.message %}
+                            <br>
+                            <span class="text-secondary small">
+                                Message: {{ tx.message }}
+                            </span>
+                        {% endif %}
                     </div>
-                    <span class="fw-bold {% if tx.amount > 0 %}text-success{% else %}text-danger{% endif %}">
+                    <span class="fw-bold {% if tx.account_to_id == wallet.id %}text-success{% else %}text-danger{% endif %}">
                         {% if tx.account_to_id == wallet.id %}+{% else %}-{% endif %}
                         {{ tx.amount }} {{ wallet.currency|upper }}
                     </span>

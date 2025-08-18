@@ -13,3 +13,24 @@
     </div>
 </div>
 {% endblock %}
+
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(function() {
+    $('#id_to_user').change(function() {
+        var userId = $(this).val();
+        var $toWallet = $('#id_to_account');
+        $toWallet.empty();
+        $toWallet.append($('<option>', {value: '', text: '---------'}));
+        if (userId) {
+            $.getJSON("{% url 'wallets:get_user_wallets' %}", {user_id: userId}, function(data) {
+                $.each(data.wallets, function(i, wallet) {
+                    $toWallet.append($('<option>', {value: wallet.id, text: wallet.label}));
+                });
+            });
+        }
+    });
+});
+</script>
+{% endblock %}

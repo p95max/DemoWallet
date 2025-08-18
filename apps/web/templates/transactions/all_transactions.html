@@ -17,6 +17,7 @@
                             <th>To</th>
                             <th>Amount</th>
                             <th>Status</th>
+                            <th>Message</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -49,6 +50,9 @@
                                 </span>
                                 </span>
                             </td>
+                                <td style="text-align: center">
+                            {{ txn.message|default:"-" }}
+                                </td>
                         </tr>
                         {% endfor %}
                     </tbody>

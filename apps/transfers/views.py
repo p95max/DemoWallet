@@ -1,7 +1,11 @@
+from decimal import Decimal
+
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
+
+from config import settings
 from .forms import TransferForm
 from apps.accounts.models import Account
 from apps.transactions.models import Transaction
@@ -51,22 +55,42 @@ def send_transfer(request):
                 message=message,
                 status='completed'
             )
-            Transaction.objects.create(
-                account_from=from_account,
-                account_to=to_account,
-                txn_type='p2p',
-                amount=amount,
-                currency=from_account.currency,
-                status='completed'
-            )
-            Transaction.objects.create(
-                account_from=from_account,
-                account_to=to_account,
-                txn_type='p2p',
-                amount=amount,
-                currency=to_account.currency,
-                status='completed'
-            )
+
+            if from_account.currency == to_account.currency:
+                Transaction.objects.create(
+                    account_from=from_account,
+                    account_to=to_account,
+                    txn_type='p2p',
+                    amount=amount,
+                    currency=from_account.currency,
+                    status='completed',
+                    message=message,
+                )
+            else:
+
+                rate = Decimal(str(getattr(settings, "CURRENCY_RATES", {}).get(
+                    (from_account.currency.upper(), to_account.currency.upper()), 1
+                )))
+                converted_amount = round(amount * rate, 2)
+                Transaction.objects.create(
+                    account_from=from_account,
+                    account_to=to_account,
+                    txn_type='p2p',
+                    amount=amount,
+                    currency=from_account.currency,
+                    status='completed',
+                    message=message,
+                )
+                Transaction.objects.create(
+                    account_from=None,
+                    account_to=to_account,
+                    txn_type='p2p',
+                    amount=converted_amount,
+                    currency=to_account.currency,
+                    status='completed',
+                    message=message,
+                )
+
             messages.success(request, f"Transfer sent to {to_user.username}!")
             return redirect('wallets:wallets')
     else:
