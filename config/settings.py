@@ -42,9 +42,7 @@ INSTALLED_APPS = [
     'apps.web',
     'apps.accounts',
     'apps.transactions',
-    'apps.payments',
-    'apps.ledger',
-    'apps.disputes'
+    'apps.transfers',
 ]
 
 SITE_ID = 1

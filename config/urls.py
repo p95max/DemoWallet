@@ -7,20 +7,19 @@ from django.conf.urls.static import static
 from config.settings import BASE_DIR
 
 urlpatterns = [
-    # Web
     path('', include('apps.web.urls')),
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
-
+    # Web
     path('wallets/', include('apps.accounts.urls')),
+    path('transactions/', include('apps.transactions.urls')),
+    path('transfers/', include('apps.transfers.urls')),
 
     # APIs
     path('api/users/', include('apps.users.urls')),
     path('api/accounts/', include('apps.accounts.urls_api')),
-    path('api/transactions/', include('apps.transactions.urls')),
-    path('api/payments/', include('apps.payments.urls')),
-    path('api/ledger/', include('apps.ledger.urls')),
-    path('api/disputes/', include('apps.disputes.urls')),
+    path('api/transactions/', include('apps.transactions.urls_api')),
+    path('api/transfers/', include('apps.transfers.urls_api')),
 
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
