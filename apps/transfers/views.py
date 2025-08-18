@@ -1,11 +1,26 @@
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from .forms import TransferForm
-from .models import Transfer
 from apps.accounts.models import Account
 from apps.transactions.models import Transaction
-from decimal import Decimal
+from rest_framework import viewsets, permissions
+from .models import Transfer
+from .serializers import TransferSerializer
+
+class TransferViewSet(viewsets.ModelViewSet):
+    serializer_class = TransferSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        return Transfer.objects.filter(
+            Q(sender=user) | Q(receiver=user)
+        ).order_by('-created_at')
+
+    def perform_create(self, serializer):
+        serializer.save(sender=self.request.user, status='completed')
 
 @login_required
 def send_transfer(request):

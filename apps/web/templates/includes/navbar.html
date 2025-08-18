@@ -16,7 +16,7 @@
         <a class="nav-link{% if not user.is_authenticated %} disabled{% endif %}" href="{% url 'transactions:all_transactions' %}">Transactions</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link{% if not user.is_authenticated %} disabled{% endif %}" href="/transfers/">Transfers</a>
+        <a class="nav-link{% if not user.is_authenticated %} disabled{% endif %}" href="{% url 'transfers:send_transfer' %}">Transfers</a>
     </li>
 {#    <li class="nav-item">#}
 {#        <a class="nav-link{% if not user.is_authenticated %} disabled{% endif %}" href="/disputes/">Disputes</a>#}

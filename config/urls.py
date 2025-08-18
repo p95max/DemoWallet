@@ -4,7 +4,6 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, Sp
 from django.conf import settings
 from django.conf.urls.static import static
 
-from config.settings import BASE_DIR
 
 urlpatterns = [
     path('', include('apps.web.urls')),

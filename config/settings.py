@@ -47,10 +47,11 @@ INSTALLED_APPS = [
 
 SITE_ID = 1
 
-ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+ACCOUNT_AUTHENTICATION_METHOD = "email"
 ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']
-ACCOUNT_LOGIN_METHODS = {'email'}
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_EMAIL_VERIFICATION = "none"
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 ACCOUNT_LOGOUT_REDIRECT_URL = '/'
 LOGIN_REDIRECT_URL = '/dashboard/'
@@ -179,3 +180,4 @@ CURRENCY_RATES = {
     ('USD', 'EUR'): 0.92,
     ('EUR', 'USD'): 1.09,
 }
+

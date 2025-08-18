@@ -1,4 +1,5 @@
 from django import forms
+from django.contrib.auth import get_user_model
 from apps.accounts.models import Account
 
 class TransferForm(forms.Form):
@@ -9,8 +10,6 @@ class TransferForm(forms.Form):
 
     def __init__(self, user, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Только другие пользователи
-        self.fields['to_user'].queryset = (
-            type(user).objects.exclude(pk=user.pk)
-        )
+        User = get_user_model()
+        self.fields['to_user'].queryset = User.objects.exclude(pk=user.pk)
         self.fields['from_account'].queryset = user.accounts.all()
