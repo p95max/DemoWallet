@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <h2 class="mb-4">Email Confirmation</h2>
+                    {% if confirmation %}
+                        <p class="mb-4">
+                                Please confirm that <strong>{{ email }}</strong> is your email address.
+                        </p>
+                        <form method="post" class="mb-3">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-success btn-lg w-100">
+                                Confirm
+                            </button>
+                        </form>
+                    {% else %}
+                        <div class="alert alert-info">
+                            This email confirmation link has expired or is invalid.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
