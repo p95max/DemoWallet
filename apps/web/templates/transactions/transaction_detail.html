@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-4">
+    <h2 class="mb-4 text-center">Transaction Details</h2>
+    <div class="card shadow-sm mx-auto" style="max-width: 500px;">
+        <div class="card-body">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    <strong>Date:</strong>
+                    {{ transaction.created_at|date:"d.m.Y H:i" }}
+                </li>
+                <li class="list-group-item">
+                    <strong>Type:</strong>
+                    {{ transaction.txn_type|capfirst }}
+                </li>
+                <li class="list-group-item">
+                    <strong>From:</strong>
+                    {{ transaction.account_from }}
+                </li>
+                <li class="list-group-item">
+                    <strong>To:</strong>
+                    {{ transaction.account_to }}
+                </li>
+                <li class="list-group-item">
+                    <strong>Amount:</strong>
+                    {% if transaction.account_to.owner == user %}
+                        <span class="text-success">+{{ transaction.amount }} {{ transaction.currency }}</span>
+                    {% else %}
+                        <span class="text-danger">-{{ transaction.amount }} {{ transaction.currency }}</span>
+                    {% endif %}
+                </li>
+                <li class="list-group-item">
+                    <strong>Status:</strong>
+                    {{ transaction.status|capfirst }}
+                </li>
+                <li class="list-group-item">
+                    <strong>Message:</strong>
+                    {{ transaction.message|default:"—" }}
+                </li>
+            </ul>
+            <div class="mt-4 text-center">
+                <a href="{% url 'transactions:all_transactions' %}" class="btn btn-outline-primary">Back to all transactions</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

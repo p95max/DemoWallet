@@ -22,3 +22,17 @@ def all_transactions(request):
     return render(request, "transactions/all_transactions.html", {
         "transactions": transactions,
     })
+
+@login_required
+def transaction_detail(request, pk):
+    user_wallets = request.user.accounts.values_list('pk', flat=True)
+    transaction = get_object_or_404(
+        Transaction.objects.filter(
+            Q(pk=pk) & (Q(account_from__in=user_wallets) | Q(account_to__in=user_wallets))
+        )
+    )
+    context = {
+        "transaction": transaction,
+    }
+
+    return render(request, "transactions/transaction_detail.html", context=context)

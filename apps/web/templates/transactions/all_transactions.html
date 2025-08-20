@@ -8,55 +8,59 @@
                 All your transactions
             </h4>
             {% if transactions %}
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Type</th>
-                            <th>From</th>
-                            <th>To</th>
-                            <th>Amount</th>
-                            <th>Status</th>
-                            <th>Message</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for txn in transactions %}
-                        <tr>
-                            <td>{{ txn.created_at|date:"d.m.Y H:i" }}</td>
-                            <td>{{ txn.get_txn_type_display }}</td>
-                            <td>
-                                {% if txn.account_from %}
-                                    {{ txn.account_from.get_type_display|default:"—" }} ({{ txn.account_from.currency|upper }})
-                                    {% if txn.account_from.owner == user %}<b> (Me)</b>{% endif %}
-                                {% else %}
-                                    <span class="text-muted">External</span>
-                                {% endif %}
-                            </td>
-                            <td>
-                                {{ txn.account_to.get_type_display|default:"—" }} ({{ txn.account_to.currency|upper }})
-                                {% if txn.account_to.owner == user %}<b> (Me)</b>{% endif %}
-                            </td>
-                            <td>
-                                {% if txn.account_from.owner == user %}
-                                    <span class="text-danger">-{{ txn.amount }} {{ txn.currency|upper }}</span>
-                                {% else %}
-                                    <span class="text-success">+{{ txn.amount }} {{ txn.currency|upper }}</span>
-                                {% endif %}
-                            </td>
-                            <td>
-                                <span class="badge bg-{% if txn.status == 'completed' %}success{% else %}secondary{% endif %}">
-                                    {{ txn.get_status_display }}
-                                </span>
-                                </span>
-                            </td>
-                                <td style="text-align: center">
-                            {{ txn.message|default:"-" }}
-                                </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                <table class="table table-striped align-middle">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Type</th>
+            <th>From</th>
+            <th>To</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th>Message</th>
+            <th>Details</th>
+    </thead>
+    <tbody>
+        {% for txn in transactions %}
+        <tr>
+            <td>{{ txn.created_at|date:"d.m.Y H:i" }}</td>
+            <td>{{ txn.get_txn_type_display }}</td>
+            <td>
+                {% if txn.account_from %}
+                    {{ txn.account_from.get_type_display|default:"—" }} ({{ txn.account_from.currency|upper }})
+                    {% if txn.account_from.owner == user %}<b> (Me)</b>{% endif %}
+                {% else %}
+                    <span class="text-muted">External</span>
+                {% endif %}
+            </td>
+            <td>
+                {{ txn.account_to.get_type_display|default:"—" }} ({{ txn.account_to.currency|upper }})
+                {% if txn.account_to.owner == user %}<b> (Me)</b>{% endif %}
+            </td>
+            <td>
+                {% if txn.account_from.owner == user %}
+                    <span class="text-danger">-{{ txn.amount }} {{ txn.currency|upper }}</span>
+                {% else %}
+                    <span class="text-success">+{{ txn.amount }} {{ txn.currency|upper }}</span>
+                {% endif %}
+            </td>
+            <td>
+                <span class="badge bg-{% if txn.status == 'completed' %}success{% else %}secondary{% endif %}">
+                    {{ txn.get_status_display }}
+                </span>
+            </td>
+            <td style="text-align: center">
+                {{ txn.message|default:"-" }}
+            </td>
+            <td class="text-center">
+                <a href="{% url 'transactions:transaction_detail' txn.pk %}" class="btn btn-sm btn-outline-primary" title="View details">
+                    <i class="fa fa-arrow-right"></i>
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
             {% else %}
                 <div class="alert alert-info">No transactions yet.</div>
             {% endif %}
