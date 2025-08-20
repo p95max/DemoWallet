@@ -1,4 +1,5 @@
 from decimal import Decimal
+from locale import currency
 
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
@@ -12,6 +13,8 @@ from apps.transactions.models import Transaction
 from rest_framework import viewsets, permissions
 from .models import Transfer
 from .serializers import TransferSerializer
+from ..notifications.models import Notification
+
 
 class TransferViewSet(viewsets.ModelViewSet):
     serializer_class = TransferSerializer
@@ -27,7 +30,7 @@ class TransferViewSet(viewsets.ModelViewSet):
         serializer.save(sender=self.request.user, status='completed')
 
 @login_required
-def send_transfer(request):
+def send_transfer(request, from_user=None):
     if request.method == "POST":
         form = TransferForm(request.user, request.POST)
         if form.is_valid():
@@ -90,7 +93,12 @@ def send_transfer(request):
                     status='completed',
                     message=message,
                 )
-
+            Notification.objects.create(
+                recipient=to_user,
+                notification_type='transfer',
+                title='Funds received',
+                message=f'You have received a transfer of {amount} {from_account.currency} from {request.user.email}'
+            )
             messages.success(request, f"Transfer sent to {to_user.username}!")
             return redirect('wallets:wallets')
     else:

@@ -13,7 +13,7 @@ urlpatterns = [
     path('wallets/', include('apps.accounts.urls')),
     path('transactions/', include('apps.transactions.urls')),
     path('transfers/', include('apps.transfers.urls')),
-
+    path('notifications/', include(('apps.notifications.urls', 'notifications'), namespace='notifications')),
     # APIs
     path('api/users/', include('apps.users.urls')),
     path('api/accounts/', include('apps.accounts.urls_api')),

@@ -43,14 +43,11 @@ INSTALLED_APPS = [
     'apps.accounts',
     'apps.transactions',
     'apps.transfers',
+    'apps.notifications',
 ]
 
 SITE_ID = 1
 
-ACCOUNT_AUTHENTICATION_METHOD = "email"
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_USERNAME_REQUIRED = False
-ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 ACCOUNT_LOGIN_ON_SIGNUP = False
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
@@ -84,6 +81,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+
+                'apps.notifications.context_processors.unread_notifications_count'
             ],
         },
     },
