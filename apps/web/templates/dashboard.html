@@ -1,7 +1,118 @@
-{% extends 'base.html' %}
-
-{% block title %} Dashboard {% endblock %}
+{% extends "base.html" %}
 
 {% block content %}
-<h1>test dashboard page</h1>
+<div class="container py-4">
+    <h2 class="mb-4">Dashboard</h2>
+    <div class="row g-4">
+        <!-- Balance -->
+        <div class="col-md-4">
+            <div class="card text-center shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Total Balance</h5>
+                    <p class="display-6 fw-bold">{{ total_balance }} EUR</p>
+                    <div>
+                        {% for acc in accounts %}
+                            <div>{{ acc.currency|upper }}: <b>{{ acc.balance }}</b></div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Quick Actions -->
+<div class="col-md-4">
+    <div class="card text-center shadow-sm">
+        <div class="card-body">
+            <h5 class="card-title">Quick Actions</h5>
+            <a href="{% url 'wallets:transfer_wallet' %}" class="btn btn-primary mb-2 w-100" title="Transfer money between your wallets">
+                <i class="fa fa-exchange-alt me-1"></i>
+                Send Money between your wallets
+            </a>
+            <a href="{% url 'transfers:send_transfer' %}" class="btn btn-outline-success mb-2 w-100" title="Send funds to another users">
+                <i class="fa fa-exchange-alt me-1"></i>
+                Send funds to another users
+            </a>
+        </div>
+    </div>
+</div>
+        <!-- KYC/Notifications -->
+        <div class="col-md-4">
+            <div class="card text-center shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Profile</h5>
+                    <div>KYC Status:
+                        <span class="badge bg-{% if user.kyc_status == 'verified' %}success{% elif user.kyc_status == 'pending' %}warning{% else %}secondary{% endif %}">
+                            {{ user.kyc_status|capfirst }}
+                        </span>
+                    </div>
+                    {% if user.kyc_status != 'verified' %}
+{#                        <a href="{% url 'kyc' %}" class="btn btn-warning btn-sm mt-2">Complete Verification</a>#}
+                    {% endif %}
+                    <hr>
+                        <h6>Notifications</h6>
+                        {% if notifications %}
+                            {% for n in notifications|slice:":3" %}
+                                <div>
+                                    <i class="fa fa-bell me-1"></i>
+                                    <b>{{ n.title }}</b>: {{ n.message|truncatechars:100 }}
+                                </div>
+                            {% endfor %}
+                            <a href="{% url 'notifications:notifications_list' %}" class="btn btn-success mb-2 w-100">All Notifications ></a>
+                        {% else %}
+                            <div class="text-muted">No notifications</div>
+                        {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Recent Transactions -->
+    <div class="card mt-4 shadow-sm">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <span>Recent Transactions</span>
+            <a href="{% url 'transactions:all_transactions' %}" class="btn btn-sm btn-outline-primary">View all</a>
+        </div>
+        <div class="card-body p-0">
+            <table class="table table-sm mb-0">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Type</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for txn in transactions|slice:":5" %}
+                    <tr>
+                        <td>{{ txn.created_at|date:"d.m.Y H:i" }}</td>
+                        <td>{{ txn.get_txn_type_display }}</td>
+                        <td>
+                            {% if txn.account_from.owner == user %}
+                                <span class="text-danger">-{{ txn.amount }} {{ txn.currency|upper }}</span>
+                            {% else %}
+                                <span class="text-success">+{{ txn.amount }} {{ txn.currency|upper }}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <span class="badge bg-{% if txn.status == 'completed' %}success{% else %}secondary{% endif %}">
+                                {{ txn.get_status_display }}
+                            </span>
+                        </td>
+                        <td>
+                            <a href="{% url 'transactions:transaction_detail' txn.pk %}" class="btn btn-sm btn-outline-primary" title="View details">
+                                <i class="fa fa-arrow-right"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center text-muted">No transactions yet.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 {% endblock %}
+

@@ -60,7 +60,7 @@ def send_transfer(request, from_user=None):
             )
 
             if from_account.currency == to_account.currency:
-                Transaction.objects.create(
+                txn = Transaction.objects.create(
                     account_from=from_account,
                     account_to=to_account,
                     txn_type='p2p',
@@ -69,13 +69,19 @@ def send_transfer(request, from_user=None):
                     status='completed',
                     message=message,
                 )
+                Notification.objects.create(
+                    recipient=to_user,
+                    notification_type='transfer',
+                    title='Funds received',
+                    message=f'You have received a transfer of {amount} {from_account.currency} from {request.user.email}',
+                    transaction=txn
+                )
             else:
-
                 rate = Decimal(str(getattr(settings, "CURRENCY_RATES", {}).get(
                     (from_account.currency.upper(), to_account.currency.upper()), 1
                 )))
                 converted_amount = round(amount * rate, 2)
-                Transaction.objects.create(
+                txn_from = Transaction.objects.create(
                     account_from=from_account,
                     account_to=to_account,
                     txn_type='p2p',
@@ -84,7 +90,7 @@ def send_transfer(request, from_user=None):
                     status='completed',
                     message=message,
                 )
-                Transaction.objects.create(
+                txn_to = Transaction.objects.create(
                     account_from=None,
                     account_to=to_account,
                     txn_type='p2p',
@@ -93,12 +99,14 @@ def send_transfer(request, from_user=None):
                     status='completed',
                     message=message,
                 )
-            Notification.objects.create(
-                recipient=to_user,
-                notification_type='transfer',
-                title='Funds received',
-                message=f'You have received a transfer of {amount} {from_account.currency} from {request.user.email}'
-            )
+                Notification.objects.create(
+                    recipient=to_user,
+                    notification_type='transfer',
+                    title='Funds received',
+                    message=f'You have received a transfer of {converted_amount} {to_account.currency} from {request.user.email}',
+                    transaction=txn_to
+                )
+
             messages.success(request, f"Transfer sent to {to_user.username}!")
             return redirect('wallets:wallets')
     else:

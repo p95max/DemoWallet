@@ -1,6 +1,9 @@
 from django.db import models
 from django.conf import settings
 
+from apps.transactions.models import Transaction
+
+
 class Notification(models.Model):
     NOTIFICATION_TYPES = [
         ('transfer', 'New transfer'),
@@ -17,6 +20,8 @@ class Notification(models.Model):
     message = models.TextField()
     is_read = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
+    transaction = models.ForeignKey(Transaction, null=True, blank=True, on_delete=models.SET_NULL,
+                                    related_name='notifications')
 
     class Meta:
         ordering = ['-created_at']
